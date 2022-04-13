@@ -1,3 +1,4 @@
+import { useState } from "react";
 import type { NextPage } from "next";
 import DataGrid, {
   Editing,
@@ -10,9 +11,7 @@ import DataGrid, {
   SortByGroupSummaryInfo,
 } from "devextreme-react/data-grid";
 import { agencyConsignees } from "../src/constants/agencyConsignees";
-import { useState } from "react";
-
-const columns = ["CompanyName", "City", "State", "Phone", "Fax"];
+import { ContextMenuCell } from "../src/components/ContextMenuCell";
 
 const Home: NextPage = () => {
   const [data, setData] = useState(agencyConsignees);
@@ -21,15 +20,54 @@ const Home: NextPage = () => {
     setData([...data].map((i) => (i.id === e.key ? { ...e.data } : i)));
   };
 
+  const onHandleContextMenuPreparing = (e) => {
+    let items = [];
+    const field: string = e.column.dataField;
+    const fields: string[] = field.split(".");
+
+    if (fields.length > 1 && e.row.rowType === "data") {
+      items.push(
+        {
+          text: "Kilos añadidos (amarillo)",
+          onItemClick: () => {
+            e.row.data[fields[0]].tag = "added";
+            setData([...data].map((i) => (i.id === e.key ? { ...e.data } : i)));
+          },
+        },
+        {
+          text: "Kilos eliminados (verde)",
+          onItemClick: () => {
+            e.row.data[fields[0]].tag = "deleted";
+            setData([...data].map((i) => (i.id === e.key ? { ...e.data } : i)));
+          },
+        },
+        {
+          text: "Alerta: cancelación (rojo)",
+          onItemClick: () => {
+            e.row.data[fields[0]].tag = "cancelation";
+            setData([...data].map((i) => (i.id === e.key ? { ...e.data } : i)));
+          },
+        }
+      );
+    }
+
+    e.items = items;
+  };
+
+  const renderTitleHeader = (data) => {
+    return <p style={{ fontWeight: "bold" }}>{data.column.caption}</p>;
+  };
+
   return (
     <div>
-      <h1>Hola Mundo</h1>
+      {JSON.stringify(data, null, 3)}
       <DataGrid
         id="gridContainerAC"
         keyExpr="id"
         dataSource={data}
         showBorders={true}
         onRowUpdated={onRowUpdated}
+        onContextMenuPreparing={onHandleContextMenuPreparing}
       >
         <Selection mode="single" />
         <Editing
@@ -38,15 +76,17 @@ const Home: NextPage = () => {
           allowAdding={false}
           allowDeleting={false}
           selectTextOnEditStart={true}
-          startEditAction="dblClick"
+          startEditAction="click"
         />
         <GroupPanel visible={true} />
         <SearchPanel visible={true} placeholder="Buscar " />
+        <Column dataField="id" caption="id" allowEditing={false} />
         <Column
           dataField="agencyName"
           width={130}
           caption="Agencia"
           allowEditing={false}
+          // headerCellRender={renderTitleHeader}
         />
         <Column
           dataField="consigneeName"
@@ -54,14 +94,31 @@ const Home: NextPage = () => {
           caption="Consignatario"
           allowEditing={false}
         />
-        <Column dataField="edit.valueKg" width={160} caption="Editable" />
-        <Column dataField="close.valueKg" width={160} caption="Cierre" />
+        {/* <Column dataField="edit.valueKg" width={160} caption="Editable" /> */}
         <Column
-          dataField="structural.valueKg"
           width={160}
-          caption="Estructura"
+          dataField="edit.valueKg"
+          caption="Editable"
+          cellRender={ContextMenuCell}
         />
-        <Column dataField="booking.valueKg" width={160} caption="Reserva" />
+        <Column
+          width={160}
+          dataField="close.valueKg"
+          caption="Cierre"
+          cellRender={ContextMenuCell}
+        />
+        <Column
+          width={160}
+          dataField="structural.valueKg"
+          caption="Estructura"
+          cellRender={ContextMenuCell}
+        />
+        <Column
+          width={160}
+          dataField="booking.valueKg"
+          caption="Reserva"
+          cellRender={ContextMenuCell}
+        />
         <Column dataField="agencyName" caption="Agencia" groupIndex={1} />
         <Column dataField="day" caption="Dia" groupIndex={0} />
 
