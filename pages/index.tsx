@@ -9,6 +9,8 @@ import DataGrid, {
   GroupPanel,
   SearchPanel,
   SortByGroupSummaryInfo,
+  FilterRow,
+  HeaderFilter,
 } from "devextreme-react/data-grid";
 import { agencyConsignees } from "../src/constants/agencyConsignees";
 import { ContextMenuCell } from "../src/components/ContextMenuCell";
@@ -60,7 +62,7 @@ const Home: NextPage = () => {
 
   return (
     <div>
-      {JSON.stringify(data, null, 3)}
+      {/* {JSON.stringify(data, null, 3)}  */}
       <DataGrid
         id="gridContainerAC"
         keyExpr="id"
@@ -69,6 +71,8 @@ const Home: NextPage = () => {
         onRowUpdated={onRowUpdated}
         onContextMenuPreparing={onHandleContextMenuPreparing}
       >
+        <FilterRow visible={true} />
+        <HeaderFilter visible={true} />
         <Selection mode="single" />
         <Editing
           mode="batch"
