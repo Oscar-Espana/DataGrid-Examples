@@ -14,8 +14,13 @@ import DataGrid, {
 } from "devextreme-react/data-grid";
 import { agencyConsignees } from "../src/constants/agencyConsignees";
 import { ContextMenuCell } from "../src/components/ContextMenuCell";
+import esMessages from "devextreme/localization/messages/es.json";
+import { locale, loadMessages } from "devextreme/localization";
 
 const Home: NextPage = () => {
+  loadMessages(esMessages);
+  locale("es");
+
   const [data, setData] = useState(agencyConsignees);
 
   const onRowUpdated = (e) => {
