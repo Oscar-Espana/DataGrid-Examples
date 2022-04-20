@@ -11,6 +11,7 @@ import DataGrid, {
   SortByGroupSummaryInfo,
   FilterRow,
   HeaderFilter,
+  ColumnFixing,
 } from "devextreme-react/data-grid";
 import { agencyConsignees } from "../src/constants/agencyConsignees";
 import { ContextMenuCell } from "../src/components/ContextMenuCell";
@@ -73,12 +74,16 @@ const Home: NextPage = () => {
         keyExpr="id"
         dataSource={data}
         showBorders={true}
+        allowColumnReordering={true}
+        allowColumnResizing={true}
+        columnAutoWidth={true}
         onRowUpdated={onRowUpdated}
-        onContextMenuPreparing={onHandleContextMenuPreparing}
+        // onContextMenuPreparing={onHandleContextMenuPreparing}
       >
         <FilterRow visible={true} />
         <HeaderFilter visible={true} />
         <Selection mode="single" />
+        <ColumnFixing enabled={true} />
         <Editing
           mode="batch"
           allowUpdating={true}
@@ -89,12 +94,13 @@ const Home: NextPage = () => {
         />
         <GroupPanel visible={true} />
         <SearchPanel visible={true} placeholder="Buscar " />
-        <Column dataField="id" caption="id" allowEditing={false} />
+        <Column dataField="id" caption="id" allowEditing={false} fixed={true} />
         <Column
           dataField="agencyName"
           width={130}
           caption="Agencia"
           allowEditing={false}
+          fixed={true}
           // headerCellRender={renderTitleHeader}
         />
         <Column
@@ -102,6 +108,7 @@ const Home: NextPage = () => {
           width={160}
           caption="Consignatario"
           allowEditing={false}
+          fixed={true}
         />
         {/* <Column dataField="edit.valueKg" width={160} caption="Editable" /> */}
         <Column
@@ -128,8 +135,13 @@ const Home: NextPage = () => {
           caption="Reserva"
           cellRender={ContextMenuCell}
         />
-        <Column dataField="agencyName" caption="Agencia" groupIndex={1} />
-        <Column dataField="day" caption="Dia" groupIndex={0} />
+        <Column
+          dataField="agencyName"
+          caption="Agencia"
+          groupIndex={1}
+          fixed={true}
+        />
+        <Column dataField="day" caption="Dia" groupIndex={0} fixed={true} />
 
         <Summary>
           <GroupItem
