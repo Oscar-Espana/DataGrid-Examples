@@ -29,9 +29,7 @@ export const ContextMenuCell = (cellValue: any): React.ReactNode => {
   return (
     <div id="menu" style={{ background: getBackgroundColor(cell.tag) }}>
       {formatNumber(cell.valueKg, {
-        type: "currency",
-        currency: "USD",
-        precision: 2,
+        type: "decimal",
       })}
     </div>
   );

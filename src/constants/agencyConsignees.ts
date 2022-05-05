@@ -176,4 +176,33 @@ export const agencyConsignees = [
       valueMt: 0,
     },
   },
+  {
+    id: 7,
+    day: "MARTES",
+    product: "FRUTA 2",
+    agencyName: "EC TEST",
+    agencyId: "12345-5b19-4a55-ba54-230f9bc4e7ab",
+    consigneeName: "",
+    consigneeId: "",
+    edit: {
+      tag: "",
+      valueKg: 10,
+      valueMt: 0,
+    },
+    close: {
+      tag: "",
+      valueKg: 1.4,
+      valueMt: 0,
+    },
+    booking: {
+      tag: "",
+      valueKg: 7.6,
+      valueMt: 0,
+    },
+    structural: {
+      tag: "",
+      valueKg: 80,
+      valueMt: 0,
+    },
+  },
 ];

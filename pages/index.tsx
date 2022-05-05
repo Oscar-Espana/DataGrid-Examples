@@ -4,66 +4,27 @@ import DataGrid, {
   Editing,
   Column,
   Selection,
-  Summary,
-  GroupItem,
   GroupPanel,
   SearchPanel,
-  SortByGroupSummaryInfo,
   FilterRow,
   HeaderFilter,
   ColumnFixing,
+  ColumnChooser,
 } from "devextreme-react/data-grid";
-import { agencyConsignees } from "../src/constants/agencyConsignees";
-import { ContextMenuCell } from "../src/components/ContextMenuCell";
+import exportation from "../src/constants/exportation";
+import { OperationCell } from "../src/components/OperationCell";
 import esMessages from "devextreme/localization/messages/es.json";
-import { locale, loadMessages } from "devextreme/localization";
+import { locale, loadMessages, formatDate } from "devextreme/localization";
+import { TimeCell } from "../src/components/TimeCell";
 
-const Home: NextPage = () => {
+const Operations: NextPage = () => {
   loadMessages(esMessages);
   locale("es");
 
-  const [data, setData] = useState(agencyConsignees);
+  const [data, setData] = useState(exportation.getData());
 
   const onRowUpdated = (e) => {
-    setData([...data].map((i) => (i.id === e.key ? { ...e.data } : i)));
-  };
-
-  const onHandleContextMenuPreparing = (e) => {
-    let items = [];
-    const field: string = e.column.dataField;
-    const fields: string[] = field.split(".");
-
-    if (fields.length > 1 && e.row.rowType === "data") {
-      items.push(
-        {
-          text: "Kilos añadidos (amarillo)",
-          onItemClick: () => {
-            e.row.data[fields[0]].tag = "added";
-            setData([...data].map((i) => (i.id === e.key ? { ...e.data } : i)));
-          },
-        },
-        {
-          text: "Kilos eliminados (verde)",
-          onItemClick: () => {
-            e.row.data[fields[0]].tag = "deleted";
-            setData([...data].map((i) => (i.id === e.key ? { ...e.data } : i)));
-          },
-        },
-        {
-          text: "Alerta: cancelación (rojo)",
-          onItemClick: () => {
-            e.row.data[fields[0]].tag = "cancelation";
-            setData([...data].map((i) => (i.id === e.key ? { ...e.data } : i)));
-          },
-        }
-      );
-    }
-
-    e.items = items;
-  };
-
-  const renderTitleHeader = (data) => {
-    return <p style={{ fontWeight: "bold" }}>{data.column.caption}</p>;
+    setData([...data].map((i) => (i.ID === e.key ? { ...e.data } : i)));
   };
 
   return (
@@ -71,19 +32,20 @@ const Home: NextPage = () => {
       {/* {JSON.stringify(data, null, 3)}  */}
       <DataGrid
         id="gridContainerAC"
-        keyExpr="id"
+        keyExpr="ID"
         dataSource={data}
         showBorders={true}
         allowColumnReordering={true}
         allowColumnResizing={true}
         columnAutoWidth={true}
         onRowUpdated={onRowUpdated}
-        // onContextMenuPreparing={onHandleContextMenuPreparing}
       >
         <FilterRow visible={true} />
         <HeaderFilter visible={true} />
         <Selection mode="single" />
         <ColumnFixing enabled={true} />
+        <ColumnChooser enabled={true} mode="select" />
+
         <Editing
           mode="batch"
           allowUpdating={true}
@@ -94,91 +56,54 @@ const Home: NextPage = () => {
         />
         <GroupPanel visible={true} />
         <SearchPanel visible={true} placeholder="Buscar " />
-        <Column dataField="id" caption="id" allowEditing={false} fixed={true} />
-        <Column
-          dataField="agencyName"
-          width={130}
-          caption="Agencia"
-          allowEditing={false}
-          fixed={true}
-          // headerCellRender={renderTitleHeader}
-        />
-        <Column
-          dataField="consigneeName"
-          width={160}
-          caption="Consignatario"
-          allowEditing={false}
-          fixed={true}
-        />
-        {/* <Column dataField="edit.valueKg" width={160} caption="Editable" /> */}
-        <Column
-          width={160}
-          dataField="edit.valueKg"
-          caption="Editable"
-          cellRender={ContextMenuCell}
-        />
-        <Column
-          width={160}
-          dataField="close.valueKg"
-          caption="Cierre"
-          cellRender={ContextMenuCell}
-        />
-        <Column
-          width={160}
-          dataField="structural.valueKg"
-          caption="Estructura"
-          cellRender={ContextMenuCell}
-        />
-        <Column
-          width={160}
-          dataField="booking.valueKg"
-          caption="Reserva"
-          cellRender={ContextMenuCell}
-        />
-        <Column
-          dataField="agencyName"
-          caption="Agencia"
-          groupIndex={1}
-          fixed={true}
-        />
-        <Column dataField="day" caption="Dia" groupIndex={0} fixed={true} />
-
-        <Summary>
-          <GroupItem
-            column="agencyName"
-            summaryType="count"
-            displayFormat="{0} registros"
+        <Column caption="Informacion" alignment="center">
+          <Column dataField="OUT" fixed={true} />
+          <Column dataField="QQD" fixed={true} />
+          <Column
+            dataField="agencyName"
+            width={130}
+            caption="Agencia"
+            allowEditing={false}
+            fixed={true}
           />
-          <GroupItem
-            column="edit.valueKg"
-            alignByColumn={true}
-            summaryType="sum"
-            displayFormat="Total: {0}"
+          <Column
+            dataField="consigneeName"
+            width={160}
+            caption="Consignatario"
+            allowEditing={false}
+            fixed={true}
           />
-          <GroupItem
-            column="close.valueKg"
-            alignByColumn={true}
-            summaryType="sum"
-            displayFormat="Total: {0}"
+          <Column dataField="origin" caption="Origen" />
+          <Column dataField="destination" caption="Destino" />
+          <Column dataField="AWB" />
+          <Column dataField="number" caption="Número" />
+          <Column dataField="weight" caption="Peso reserva" />
+          <Column dataField="m3Booking" caption="m3 Reserva" />
+          <Column dataField="bod" caption="Bod" />
+          <Column dataField="DV" />
+          <Column dataField="transport" caption="Transporte" />
+          <Column dataField="remarks" caption="Remarks" />
+          <Column dataField="PR" />
+          <Column dataField="shipment" caption="Carga" />
+          <Column dataField="flight" caption="Vuelo / Doc" />
+          <Column
+            dataField="hours"
+            caption="Hora Docs"
+            dataType="datetime"
+            format="shortTime"
           />
-
-          <GroupItem
-            column="structural.valueKg"
-            alignByColumn={true}
-            summaryType="sum"
-            displayFormat="Total: {0}"
-          />
-          <GroupItem
-            column="booking.valueKg"
-            alignByColumn={true}
-            summaryType="sum"
-            displayFormat="Total: {0}"
-          />
-        </Summary>
-        <SortByGroupSummaryInfo summaryItem="count" />
+          {/* <Column dataField="hours" cellRender={TimeCell} /> */}
+        </Column>
+        <Column caption="Cierres o Docs Recibidos" alignment="center">
+          <Column dataField="pieces" caption="Piezas" />
+          <Column dataField="netWeight" caption="Peso neto" />
+          <Column dataField="volumeWeight" caption="Peso volumne" />
+          <Column dataField="m3" />
+        </Column>
+        <Column caption="Total" cellRender={OperationCell} />
       </DataGrid>
     </div>
   );
 };
 
-export default Home;
+export default Operations;
