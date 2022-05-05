@@ -24,11 +24,11 @@ const Home: NextPage = () => {
 
   const [data, setData] = useState(agencyConsignees);
 
-  const onRowUpdated = (e) => {
+  const onRowUpdated = (e: any) => {
     setData([...data].map((i) => (i.id === e.key ? { ...e.data } : i)));
   };
 
-  const onHandleContextMenuPreparing = (e) => {
+  const onHandleContextMenuPreparing = (e: any) => {
     let items = [];
     const field: string = e.column.dataField;
     const fields: string[] = field.split(".");
@@ -62,7 +62,7 @@ const Home: NextPage = () => {
     e.items = items;
   };
 
-  const renderTitleHeader = (data) => {
+  const renderTitleHeader = (data: any) => {
     return <p style={{ fontWeight: "bold" }}>{data.column.caption}</p>;
   };
 

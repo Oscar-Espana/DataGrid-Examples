@@ -3,7 +3,7 @@ import ContextMenu from "devextreme-react/context-menu";
 import notify from "devextreme/ui/notify";
 import { formatNumber } from "devextreme/localization";
 
-function gridCellData(gridData) {
+function gridCellData(gridData: any) {
   const field: string = gridData.column.dataField;
   const fields: string[] = field.split(".");
   const cell = gridData.data[fields[0]];

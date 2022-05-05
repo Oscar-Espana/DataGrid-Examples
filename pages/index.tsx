@@ -23,7 +23,7 @@ const Operations: NextPage = () => {
 
   const [data, setData] = useState(exportation.getData());
 
-  const onRowUpdated = (e) => {
+  const onRowUpdated = (e: any) => {
     setData([...data].map((i) => (i.ID === e.key ? { ...e.data } : i)));
   };
 

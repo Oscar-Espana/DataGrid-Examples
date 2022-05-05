@@ -41,7 +41,7 @@ const DetailTemplate = (props: any) => {
   );
 };
 
-function getTasks(key) {
+function getTasks(key: any) {
   return new DataSource({
     store: new ArrayStore({
       data: tasks,
